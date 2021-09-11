@@ -4,7 +4,7 @@ const BASE_WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather?';
 const ONECALL_WEATHER_URL = 'https://api.openweathermap.org/data/2.5/onecall?';
 const GEOCODE_URL = 'https://api.openweathermap.org/geo/1.0/direct?';
 
-// REDACTED
+// THIS LINE IS REDACTED
 
 let currLocation;
 var newLat;
