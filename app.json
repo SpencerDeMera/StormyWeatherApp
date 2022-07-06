@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "0.6.1 Beta",
+    "version": "0.9.3.2 Beta",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -27,6 +27,6 @@
       },
       "package": "com.frostlabs.stormyweather"
     },
-    "description": "Beta Test of StormyWeather OpenWeather based app."
+    "description": "Android Beta Development Version of StormyWeather: an OpenWeather Based App."
   }
 }

@@ -3,14 +3,15 @@ import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-nat
 import { FontAwesome5 } from 'react-native-vector-icons';
 import { getIsDark } from '../utils/index';
 import { colors } from '../utils/colors';
+import { ICONS } from '../utils/weatherIcons';
 
-const {PRIMARY_COLOR, SECONDARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_BLACK, TEXT_COLOR_LIGHTGRAY} = colors;
+const {PRIMARY_COLOR, SECONDARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_BLACK} = colors;
 
 // Degree symbol : °
 
-let isDark = getIsDark();
+let isDark;
 
-function _getFormattedTime(epoch) {
+function getFormattedTime(epoch) {
     var formattedTime;
     const time = new Date(epoch * 1000);
     const hours = time.getHours();
@@ -27,9 +28,11 @@ function _getFormattedTime(epoch) {
         formattedTime = `${hours - 12} AM`;
     }
     return formattedTime;
-} // _getFormattedTime function
+} // getFormattedTime function
 
 export default function HourlyWeather({ weatherInfo, units }) {
+    isDark = getIsDark();
+
     const WeatherScroll = () => {
         return (
             <ScrollView horizontal={true} style={styles.scrollView} bounces={true} showsHorizontalScrollIndicator={false}>
@@ -64,13 +67,25 @@ export default function HourlyWeather({ weatherInfo, units }) {
     }
 
     const CurrTempForecast = () => {
-        const iconURL = `https://openweathermap.org/img/wn/${weatherInfo.current.weather[0].icon}@4x.png`;
+        const id = weatherInfo.current.weather[0].id;
+        const icon = weatherInfo.current.weather[0].icon;
+
+        var iconNum = 8001;
+        if ((id > 799 && id < 805) || (id > 299 && id < 623)) {
+            if (icon.charAt(2) == 'd') {
+                iconNum = (id * 10) + 1;
+            } else {
+                iconNum = (id * 10) + 2;
+            }
+        } else if ((id > 199 && id < 300) || (id > 699 && id < 782)) {
+            iconNum = id;
+        }
     
         if (units === 'imperial') {
             return (
                 <View style={styles.CurrDetailsContainer}>
-                    <Text style={styles.timeData}>{_getFormattedTime(weatherInfo.current.dt)}</Text> 
-                    <Image style={styles.iconStyle} source={{uri: iconURL}}/>
+                    <Text style={styles.timeData}>{getFormattedTime(weatherInfo.current.dt)}</Text> 
+                    <Image style={styles.iconStyle} source={ICONS[iconNum].image}/>
                     <Text style={styles.tempText}>{Math.round(weatherInfo.current.temp)}°F</Text>
                     <View style={styles.rainContainer}>
                         <Text style={styles.popText}>{Math.round((weatherInfo.hourly[0].pop)*100)}%</Text>
@@ -80,8 +95,8 @@ export default function HourlyWeather({ weatherInfo, units }) {
         } else if (units === 'metric') {
             return (
                 <View style={styles.CurrDetailsContainer}>
-                    <Text style={styles.timeData}>{_getFormattedTime(weatherInfo.current.dt)}</Text> 
-                    <Image style={styles.iconStyle} source={{uri: iconURL}}/>
+                    <Text style={styles.timeData}>{getFormattedTime(weatherInfo.current.dt)}</Text> 
+                    <Image style={styles.iconStyle} source={ICONS[iconNum].image}/>
                     <Text style={styles.tempText}>{Math.round(weatherInfo.current.temp)}°C</Text>
                     <View style={styles.rainContainer}>
                         <Text style={styles.popText}>{Math.round((weatherInfo.hourly[0].pop)*100)}%</Text>
@@ -92,14 +107,30 @@ export default function HourlyWeather({ weatherInfo, units }) {
     }
 
     const FurtureForecasts = ({index}) => {
+        isDark = getIsDark();
+
         if (isDark) {
             if (index > 0 && index <= 24) {
-                const iconURL = `https://openweathermap.org/img/wn/${weatherInfo.hourly[index].weather[0].icon}@4x.png`;
+                const id = weatherInfo.hourly[index].weather[0].id;
+                const icon = weatherInfo.hourly[index].weather[0].icon;
+                const dt = weatherInfo.hourly[index].dt;
+
+                var iconNum = 8001;
+                if ((id > 799 && id < 805) || (id > 299 && id < 623)) {
+                    if (icon.charAt(2) == 'd') {
+                        iconNum = (id * 10) + 1;
+                    } else {
+                        iconNum = (id * 10) + 2;
+                    }
+                } else if ((id > 199 && id < 300) || (id > 699 && id < 782)) {
+                    iconNum = id;
+                }
+
                 if (units === 'imperial') {
                     return (
                         <View style={styles.detailsContainer}>
-                            <Text style={styles.timeData}>{_getFormattedTime(weatherInfo.hourly[index].dt)}</Text> 
-                            <Image style={styles.iconStyle} source={{uri: iconURL}}/>
+                            <Text style={styles.timeData}>{getFormattedTime(dt)}</Text> 
+                            <Image style={styles.iconStyle} source={ICONS[iconNum].image}/>
                             <Text style={styles.tempText}>{Math.round(weatherInfo.hourly[index].temp)}°F</Text>
                             <View style={styles.rainContainer}>
                                 <Text style={styles.popText}>{Math.round((weatherInfo.hourly[index].pop)*100)}%</Text>
@@ -109,8 +140,8 @@ export default function HourlyWeather({ weatherInfo, units }) {
                 } else if (units === 'metric') {
                     return (
                         <View style={styles.detailsContainer}>
-                            <Text style={styles.timeData}>{_getFormattedTime(weatherInfo.hourly[index].dt)}</Text> 
-                            <Image style={styles.iconStyle} source={{uri: iconURL}}/>
+                            <Text style={styles.timeData}>{getFormattedTime(dt)}</Text> 
+                            <Image style={styles.iconStyle} source={ICONS[iconNum].image}/>
                             <Text style={styles.tempText}>{Math.round(weatherInfo.hourly[index].temp)}°C</Text>
                             <View style={styles.rainContainer}>
                                 <Text style={styles.popText}>{Math.round((weatherInfo.hourly[index].pop)*100)}%</Text>
@@ -120,18 +151,31 @@ export default function HourlyWeather({ weatherInfo, units }) {
                 }
             } else if (index == 99) {
                 return (
-                    <View style={styles.padDetailsContainer}>
+                    <View>
                     </View>
                 );
             }
         } else {
             if (index > 0 && index <= 24) {
-                const iconURL = `https://openweathermap.org/img/wn/${weatherInfo.hourly[index].weather[0].icon}@4x.png`;
+                const id = weatherInfo.hourly[index].weather[0].id;
+                const icon = weatherInfo.hourly[index].weather[0].icon;
+
+                var iconNum = 8001;
+                if ((id > 799 && id < 805) || (id > 299 && id < 623)) {
+                    if (icon.charAt(2) == 'd') {
+                        iconNum = (id * 10) + 1;
+                    } else {
+                        iconNum = (id * 10) + 2;
+                    }
+                } else if ((id > 199 && id < 300) || (id > 699 && id < 782)) {
+                    iconNum = id;
+                }
+
                 if (units === 'imperial') {
                     return (
                         <View style={lightStyles.detailsContainer}>
-                            <Text style={lightStyles.timeData}>{_getFormattedTime(weatherInfo.hourly[index].dt)}</Text> 
-                            <Image style={lightStyles.iconStyle} source={{uri: iconURL}}/>
+                            <Text style={lightStyles.timeData}>{getFormattedTime(weatherInfo.hourly[index].dt)}</Text> 
+                            <Image style={lightStyles.iconStyle} source={ICONS[iconNum].image}/>
                             <Text style={lightStyles.tempText}>{Math.round(weatherInfo.hourly[index].temp)}°F</Text>
                             <View style={lightStyles.rainContainer}>
                                 <Text style={lightStyles.popText}>{Math.round((weatherInfo.hourly[index].pop)*100)}%</Text>
@@ -141,8 +185,8 @@ export default function HourlyWeather({ weatherInfo, units }) {
                 } else if (units === 'metric') {
                     return (
                         <View style={lightStyles.detailsContainer}>
-                            <Text style={lightStyles.timeData}>{_getFormattedTime(weatherInfo.hourly[index].dt)}</Text> 
-                            <Image style={lightStyles.iconStyle} source={{uri: iconURL}}/>
+                            <Text style={lightStyles.timeData}>{getFormattedTime(weatherInfo.hourly[index].dt)}</Text> 
+                            <Image style={lightStyles.iconStyle} source={ICONS[iconNum].image}/>
                             <Text style={lightStyles.tempText}>{Math.round(weatherInfo.hourly[index].temp)}°C</Text>
                             <View style={lightStyles.rainContainer}>
                                 <Text style={lightStyles.popText}>{Math.round((weatherInfo.hourly[index].pop)*100)}%</Text>
@@ -152,7 +196,7 @@ export default function HourlyWeather({ weatherInfo, units }) {
                 }
             } else if (index == 99) {
                 return (
-                    <View style={lightStyles.padDetailsContainer}>
+                    <View>
                     </View>
                 );
             }
@@ -164,11 +208,7 @@ export default function HourlyWeather({ weatherInfo, units }) {
             <View style={styles.container}>
                 <View style={styles.labelsContainer}>
                     <View style={styles.todayLabel}>
-                        <Text style={styles.todayText}>Today</Text>
-                    </View>
-                    <View style={styles.nextDaysButton}>
-                        <Text style={styles.labelText}>Next 24 Hours</Text>
-                        <FontAwesome5 name="arrow-right" size={15} color={TEXT_COLOR_LIGHT} style={styles.arrowIcon} onPress={()=>navigateToDailyPage()}/>
+                        <Text style={styles.todayText}>24 Hour Forecast</Text>
                     </View>
                 </View>
                 <View style={styles.detailsSectionContainer}>
@@ -181,11 +221,7 @@ export default function HourlyWeather({ weatherInfo, units }) {
             <View style={lightStyles.container}>
                 <View style={lightStyles.labelsContainer}>
                     <View style={lightStyles.todayLabel}>
-                        <Text style={lightStyles.todayText}>Today</Text>
-                    </View>
-                    <View style={lightStyles.nextDaysButton}>
-                        <Text style={lightStyles.labelText}>Next 24 Hours</Text>
-                        <FontAwesome5 name="arrow-right" size={15} color={TEXT_COLOR_LIGHT} style={styles.arrowIcon} onPress={()=>navigateToDailyPage()}/>
+                        <Text style={lightStyles.todayText}>24 Hour Forecast</Text>
                     </View>
                 </View>
                 <View style={lightStyles.detailsSectionContainer}>
@@ -218,15 +254,6 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
 
-    labelText: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: TEXT_COLOR_LIGHT,
-        fontSize: 13,
-        fontWeight: '700',
-        padding: 5,
-    },
-
     arrowIcon: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -234,25 +261,13 @@ const styles = StyleSheet.create({
     },
 
     todayLabel: {
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'center',
         marginVertical: -3,
         padding: 5,
         marginLeft: 10,
         color: TEXT_COLOR_LIGHT,
         width: (Dimensions.get('window').width - 100) / 1.6,
-    },
-
-    nextDaysButton: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        backgroundColor: SECONDARY_COLOR,
-        marginVertical: -3,
-        padding: 3,
-        borderRadius: 25,
-        width: 100,
     },
 
     scrollView: {
@@ -263,8 +278,7 @@ const styles = StyleSheet.create({
     detailsSectionContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 10,
-        width: Dimensions.get('window').width - 80,
+        width: Dimensions.get('window').width - 10,
     },
 
     CurrDetailsContainer: {
@@ -275,26 +289,19 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         paddingTop: 5,
         paddingBottom: 10,
-        paddingHorizontal: 10,
-        marginRight: 8,
+        paddingHorizontal: 5,
+        marginRight: 5,
     },
 
     detailsContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
-        marginHorizontal: 8,
+        marginHorizontal: 5,
         borderRadius: 50,
         paddingTop: 5,
         paddingBottom: 10,
-        paddingHorizontal: 10,
-    },
-
-    padDetailsContainer: {
-        alignItems: 'center',
-        marginHorizontal: 1,
-        backgroundColor: PRIMARY_COLOR,
-        paddingHorizontal: 1,
+        paddingHorizontal: 5,
     },
 
     rainContainer: {
@@ -356,15 +363,6 @@ const lightStyles = StyleSheet.create({
         fontWeight: '700',
     },
 
-    labelText: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: TEXT_COLOR_LIGHT,
-        fontSize: 13,
-        fontWeight: '700',
-        padding: 5,
-    },
-
     arrowIcon: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -372,25 +370,13 @@ const lightStyles = StyleSheet.create({
     },
 
     todayLabel: {
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'center',
         marginVertical: -3,
         padding: 5,
         marginLeft: 10,
         color: TEXT_COLOR_BLACK,
         width: (Dimensions.get('window').width - 100) / 1.6,
-    },
-
-    nextDaysButton: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        backgroundColor: SECONDARY_COLOR,
-        marginVertical: -3,
-        padding: 3,
-        borderRadius: 25,
-        width: 100,
     },
 
     scrollView: {
@@ -401,8 +387,7 @@ const lightStyles = StyleSheet.create({
     detailsSectionContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 10,
-        width: Dimensions.get('window').width - 80,
+        width: Dimensions.get('window').width - 10,
     },
 
     CurrDetailsContainer: {
@@ -413,25 +398,19 @@ const lightStyles = StyleSheet.create({
         borderRadius: 50,
         paddingTop: 5,
         paddingBottom: 10,
-        paddingHorizontal: 10,
-        marginRight: 8,
+        paddingHorizontal: 5,
+        marginRight: 5,
     },
 
     detailsContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
-        marginHorizontal: 8,
+        marginHorizontal: 5,
         borderRadius: 50,
         paddingTop: 5,
         paddingBottom: 10,
-        paddingHorizontal: 10,
-    },
-
-    padDetailsContainer: {
-        alignItems: 'center',
-        marginHorizontal: 1,
-        backgroundColor: TEXT_COLOR_LIGHT,
+        paddingHorizontal: 5,
     },
 
     rainContainer: {

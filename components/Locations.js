@@ -1,19 +1,17 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
-import countryList from 'react-select-country-list';
-import { setLocation, setCoords } from '../utils/index';
+import { setLocation, setCoords, getIsDark } from '../utils/index';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../utils/colors';
 
-const {PRIMARY_COLOR, TIERTIARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_LIGHTGRAY} = colors;
+const {PRIMARY_COLOR, TIERTIARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_LIGHTGRAY, TEXT_COLOR_DARK, TEXT_COLOR_BLACK} = colors;
 
-export default function Locations({ states, cityName, cityState, cityCountry, cityLat, cityLon }) {
-    const countries = countryList();
-    var stateName;
-
+export default function Locations({ cityName, cityState, cityCountry, cityLat, cityLon }) {
     // Navgation parameters
     const navigation = useNavigation();
+
+    let isDark = getIsDark();
 
     function onPressFunc() {
         const useCurrLocationFlag = false;
@@ -22,45 +20,76 @@ export default function Locations({ states, cityName, cityState, cityCountry, ci
         navigation.navigate("Home");
     }
 
-    for (var i = 0; i < states.length; i++) {
-        if (states[i].abbreviation === cityState) {
-            stateName = states[i].name;
-        }
-    }
-
-    if (cityName && cityCountry) {
-        if (cityState == undefined || cityState == null) { // if state DNE (not in US or AU)
-            return (
-                <TouchableOpacity style={styles.container} onPress={() => onPressFunc()}>
-                    <View style={styles.FrontContainer}>
-                        <Text style={styles.frontText}>{cityName}</Text>
-                        <Text style={styles.subFrontText}>{countries.getLabel(cityCountry)}</Text>
-                    </View>
-                    <View style={styles.BackContainer}>
-                        <Text style={styles.btnText}><MaterialCommunityIcons name="weather-lightning" size={20} color={TEXT_COLOR_LIGHT} style={styles.favIcon}/></Text>
-                    </View>
-                </TouchableOpacity>
-            );
+    if (isDark) {
+        if (cityName && cityCountry) {
+            if (cityState == undefined || cityState == null) { // if state DNE
+                return (
+                    <TouchableOpacity style={styles.container} onPress={() => onPressFunc()}>
+                        <View style={styles.FrontContainer}>
+                            <Text style={styles.frontText}>{cityName}</Text>
+                            <Text style={styles.subFrontText}>{cityCountry}</Text>
+                        </View>
+                        <View style={styles.BackContainer}>
+                            <Text style={styles.btnText}><MaterialCommunityIcons name="arrow-up-bold-circle" size={22} color={TEXT_COLOR_LIGHT} style={styles.favIcon}/></Text>
+                        </View>
+                    </TouchableOpacity>
+                );
+            } else {
+                return (
+                    <TouchableOpacity style={styles.container} onPress={() => onPressFunc()}>
+                        <View style={styles.FrontContainer}>
+                            <Text style={styles.frontText}>{cityName}</Text>
+                            <Text style={styles.subFrontText}>{cityState}, {cityCountry}</Text>
+                        </View>
+                        <View style={styles.BackContainer}>
+                            <Text style={styles.btnText}><MaterialCommunityIcons name="arrow-up-bold-circle" size={22} color={TEXT_COLOR_LIGHT} style={styles.favIcon}/></Text>
+                        </View>
+                    </TouchableOpacity>
+                );
+            }
         } else {
             return (
-                <TouchableOpacity style={styles.container} onPress={() => onPressFunc()}>
-                    <View style={styles.FrontContainer}>
-                        <Text style={styles.frontText}>{cityName}</Text>
-                        <Text style={styles.subFrontText}>{stateName}, {countries.getLabel(cityCountry)}</Text>
-                    </View>
-                    <View style={styles.BackContainer}>
-                        <Text style={styles.btnText}><MaterialCommunityIcons name="weather-lightning" size={20} color={TEXT_COLOR_LIGHT} style={styles.favIcon}/></Text>
-                    </View>
-                </TouchableOpacity>
+                <View style={styles.errContainer}>
+                    <Text style={styles.errTextMain}>No Results.</Text>
+                    <Text style={styles.errTextSub}>Try again with a different city.</Text>
+                </View>
             );
         }
     } else {
-        return (
-            <View style={styles.errContainer}>
-                <Text style={styles.errTextMain}>No Results.</Text>
-                <Text style={styles.errTextSub}>Try again with a different city.</Text>
-            </View>
-        );
+        if (cityName && cityCountry) {
+            if (cityState == undefined || cityState == null) { // if state DNE
+                return (
+                    <TouchableOpacity style={styles.container} onPress={() => onPressFunc()}>
+                        <View style={styles.FrontContainer}>
+                            <Text style={styles.frontText}>{cityName}</Text>
+                            <Text style={styles.subFrontText}>{cityCountry}</Text>
+                        </View>
+                        <View style={styles.BackContainer}>
+                            <Text style={styles.btnText}><MaterialCommunityIcons name="arrow-up-bold-circle" size={22} color={TEXT_COLOR_LIGHT} style={styles.favIcon}/></Text>
+                        </View>
+                    </TouchableOpacity>
+                );
+            } else {
+                return (
+                    <TouchableOpacity style={styles.container} onPress={() => onPressFunc()}>
+                        <View style={styles.FrontContainer}>
+                            <Text style={styles.frontText}>{cityName}</Text>
+                            <Text style={styles.subFrontText}>{cityState}, {cityCountry}</Text>
+                        </View>
+                        <View style={styles.BackContainer}>
+                            <Text style={styles.btnText}><MaterialCommunityIcons name="arrow-up-bold-circle" size={22} color={TEXT_COLOR_LIGHT} style={styles.favIcon}/></Text>
+                        </View>
+                    </TouchableOpacity>
+                );
+            }
+        } else {
+            return (
+                <View style={lightStyles.errContainer}>
+                    <Text style={lightStyles.errTextMain}>No Results.</Text>
+                    <Text style={lightStyles.errTextSub}>Try again with a different city.</Text>
+                </View>
+            );
+        }
     }
 }
 
@@ -163,5 +192,28 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: 'bold',
         color: TEXT_COLOR_LIGHTGRAY,
+    },
+});
+
+const lightStyles = StyleSheet.create({
+    errContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        marginTop: 100,
+    },
+
+    errTextMain: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: TEXT_COLOR_BLACK,
+    },
+
+    errTextSub: {
+        marginTop: 10,
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: TEXT_COLOR_DARK,
     },
 });

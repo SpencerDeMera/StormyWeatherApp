@@ -5,8 +5,9 @@ import { FontAwesome5 } from 'react-native-vector-icons';
 import { getUnitsSystem, getLocation, getCurrWeatherData, getOneCallWeatherData } from '../utils/index';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../utils/colors';
+import { ICONS } from '../utils/weatherIcons';
 
-const {PRIMARY_COLOR, SECONDARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_LIGHTGRAY} = colors;
+const {PRIMARY_COLOR, SECONDARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_DARK} = colors;
 
 // Degree symbol : °
 
@@ -60,8 +61,18 @@ export default function LocationCurrWeather() {
             name
         } = locationInfo;
 
-        const {description, icon} = weatherDetails;
-        const iconURL = `https://openweathermap.org/img/wn/${icon}@4x.png`;
+        const {id, description, icon} = weatherDetails;
+
+        var iconNum = 8001;
+        if ((id > 799 && id < 805) || (id > 299 && id < 623)) {
+            if (icon.charAt(2) == 'd') {
+                iconNum = (id * 10) + 1;
+            } else {
+                iconNum = (id * 10) + 2;
+            }
+        } else if ((id > 199 && id < 300) || (id > 699 && id < 782)) {
+            iconNum = id;
+        }
 
         function onPressFunc() {
             const useCurrLocationFlag = true;
@@ -86,7 +97,7 @@ export default function LocationCurrWeather() {
                         <View style={styles.BackContainer}>
                             <View style={styles.innerBackContainer}>
                                 <Text style={styles.tempData}>{Math.round(temp)}°F</Text>
-                                <Image style={styles.iconStyle} source={{uri: iconURL}}/>
+                                <Image style={styles.iconStyle} source={ICONS[iconNum].image}/>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -109,7 +120,7 @@ export default function LocationCurrWeather() {
                         <View style={styles.BackContainer}>
                             <View style={styles.innerBackContainer}>
                                 <Text style={styles.tempData}>{Math.round(temp)}°C</Text>
-                                <Image style={styles.iconStyle} source={{uri: iconURL}}/>
+                                <Image style={styles.iconStyle} source={ICONS[iconNum].image}/>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -208,9 +219,9 @@ const styles = StyleSheet.create({
     },
 
     descriptData: {
-        color: TEXT_COLOR_LIGHTGRAY,
+        color: TEXT_COLOR_DARK,
         fontSize: 15,
-        fontWeight: '700',
+        fontWeight: '500',
         textTransform: 'capitalize',
     },
 

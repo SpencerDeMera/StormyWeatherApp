@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, StatusBar, ActivityIndicator, Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, ActivityIndicator, Dimensions, FlatList, TouchableOpacity, Image } from 'react-native';
 import LocationsForm from '../components/LocationsForm';
 import Locations from '../components/Locations';
 import LocationCurrWeather from '../components/LocationCurrWeather';
@@ -7,7 +7,7 @@ import returnCities from '../utils/cityHooks';
 import { getStateName, getIsDark } from '../utils/index';
 import { colors } from '../utils/colors';
 
-const {PRIMARY_COLOR, SECONDARY_COLOR, TIERTIARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_DARK, TEXT_COLOR_BLACK, TEXT_COLOR_LIGHTGRAY, TEXT_COLOR_DARKGRAY} = colors;
+const {PRIMARY_COLOR, SECONDARY_COLOR, TIERTIARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_DARK, TEXT_COLOR_BLACK, TEXT_COLOR_LIGHTGRAY, BLUEBACK} = colors;
 
 // Degree symbol : °
 
@@ -29,8 +29,6 @@ export default function SearchPage({ navigation }) {
 
     // Loads default weather data & HomePage on startup
     async function load() {
-        setStates(null);
-
         try {
             const stateData = await getStateName();
             setStates(stateData);
@@ -41,7 +39,7 @@ export default function SearchPage({ navigation }) {
 
     if (isDark) {
         if (states) {
-            console.log('\n~ SearchPage ~\n');
+            console.log('\n~ SearchPage ~');
     
             function searchArr (id) {
                 for (var i = 0; i < filteredCities.length; i++) {
@@ -74,7 +72,6 @@ export default function SearchPage({ navigation }) {
                             return (
                                 <Locations 
                                     key={item.id}
-                                    states={states}
                                     cityName={item.cityName}
                                     cityState={item.cityState}
                                     cityCountry={item.cityCountry}
@@ -98,10 +95,16 @@ export default function SearchPage({ navigation }) {
                 <View style={styles.loadingContainer}>
                     <StatusBar barStyle="light-content" backgroundColor={PRIMARY_COLOR}/>
                     {/* Loading wheel */}
-                    <ActivityIndicator size={85} color={SECONDARY_COLOR} />
+                    {/* <ActivityIndicator size={85} color={SECONDARY_COLOR} /> */}
                     <View style={styles.firstLoadInfo}>
-                        <Text style={styles.loadingMssg_main}>Fetching Locations...</Text>
-                        <Text style={styles.openWeatherMssg}>Powered by OpenWeather™</Text>
+                        <Image style={styles.appIconImage} source={require('../assets/adaptive-icon.png')} />
+                        <Text style={styles.loadingMssg_main}>StormyWeather</Text>
+                        <Text style={styles.loadingMssg_sub}>Always Stormy</Text>
+                        <View style={styles.loading}>
+                            <Text style={styles.loadingMssg_minor}>Loading The Weather</Text>  
+                            {/* Loading wheel */}
+                            <ActivityIndicator size={35} color={SECONDARY_COLOR} />  
+                        </View>
                     </View>
                 </View>
             );
@@ -163,12 +166,18 @@ export default function SearchPage({ navigation }) {
         } else {
             return (
                 <View style={lightStyles.loadingContainer}>
-                    <StatusBar barStyle="dark-content" backgroundColor={TEXT_COLOR_LIGHT}/>
+                    <StatusBar barStyle="light-content" backgroundColor={PRIMARY_COLOR}/>
                     {/* Loading wheel */}
-                    <ActivityIndicator size={85} color={SECONDARY_COLOR} />
+                    {/* <ActivityIndicator size={85} color={SECONDARY_COLOR} /> */}
                     <View style={lightStyles.firstLoadInfo}>
+                        <Image style={lightStyles.appIconImage} source={require('../assets/adaptive-icon.png')} />
                         <Text style={lightStyles.loadingMssg_main}>StormyWeather</Text>
-                        <Text style={lightStyles.openWeatherMssg}>Powered by OpenWeather™</Text>
+                        <Text style={lightStyles.loadingMssg_sub}>Always Stormy</Text>
+                        <View style={lightStyles.loading}>
+                            <Text style={lightStyles.loadingMssg_minor}>Loading The Weather</Text>  
+                            {/* Loading wheel */}
+                            <ActivityIndicator size={35} color={SECONDARY_COLOR} />  
+                        </View>
                     </View>
                 </View>
             );
@@ -181,7 +190,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: TEXT_COLOR_LIGHT,
+        backgroundColor: PRIMARY_COLOR,
     },
 
     firstLoadInfo: {
@@ -190,21 +199,39 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    appIconImage: {
+        width: 150,
+        height: 150,
+    },
+
     loadingMssg_main: {
-        marginBottom: 150,
-        marginTop: 25,
-        color: TEXT_COLOR_BLACK,
+        marginBottom: 10,
+        marginTop: -10,
+        color: TEXT_COLOR_LIGHT,
         fontSize: 25,
         fontWeight: '700',
     },
 
-    openWeatherMssg: {
+    loadingMssg_sub: {
+        marginBottom: 140,
+        color: TEXT_COLOR_LIGHTGRAY,
+        fontSize: 20,
+        fontWeight: '500',
+    },
+
+    loading: {
         flex: 1,
         position: 'absolute',
-        bottom: -200,
-        color: TEXT_COLOR_BLACK,
+        bottom: -150,
+        flexDirection: 'row',
+    },
+
+    loadingMssg_minor: {
+        color: TEXT_COLOR_LIGHT,
         fontSize: 17,
         fontWeight: '500',
+        marginRight: 10,
+        marginTop: 3,
     },
 
     bodyContainer: {
@@ -282,7 +309,7 @@ const lightStyles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: TEXT_COLOR_LIGHT,
+        backgroundColor: PRIMARY_COLOR,
     },
 
     firstLoadInfo: {
@@ -291,21 +318,39 @@ const lightStyles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    appIconImage: {
+        width: 150,
+        height: 150,
+    },
+
     loadingMssg_main: {
-        marginBottom: 150,
-        marginTop: 25,
-        color: TEXT_COLOR_BLACK,
+        marginBottom: 10,
+        marginTop: -10,
+        color: TEXT_COLOR_LIGHT,
         fontSize: 25,
         fontWeight: '700',
     },
 
-    openWeatherMssg: {
+    loadingMssg_sub: {
+        marginBottom: 140,
+        color: TEXT_COLOR_LIGHTGRAY,
+        fontSize: 20,
+        fontWeight: '500',
+    },
+
+    loading: {
         flex: 1,
         position: 'absolute',
-        bottom: -200,
-        color: TEXT_COLOR_BLACK,
+        bottom: -150,
+        flexDirection: 'row',
+    },
+
+    loadingMssg_minor: {
+        color: TEXT_COLOR_LIGHT,
         fontSize: 17,
         fontWeight: '500',
+        marginRight: 10,
+        marginTop: 3,
     },
 
     bodyContainer: {

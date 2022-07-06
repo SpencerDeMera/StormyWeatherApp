@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TextInput, Dimensions, TouchableOpacity } from 'react-native';
-import { FontAwesome5 } from 'react-native-vector-icons';
+import { Ionicons, FontAwesome5 } from 'react-native-vector-icons';
 import { getIsDark } from '../utils/index';
 import { colors } from '../utils/colors';
 
@@ -33,7 +33,7 @@ export default function LocationsForm({ onNewCity = f => f }) {
                             onNewCity(city);
                             setCity('');
                         }}>
-                            <Text style={styles.btnText}><FontAwesome5 style={styles.addIconStyle} name="plus" size={20}/></Text>
+                            <Text style={styles.btnText}><Ionicons style={styles.addIconStyle} name="ios-search" size={23}/></Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: PRIMARY_COLOR,
         width: Dimensions.get('window').width,
-        marginTop: -15,
+        marginTop: -12,
     },
 
     headerContainer: {
@@ -126,7 +126,7 @@ const lightStyles = StyleSheet.create({
     container: {
         backgroundColor: TEXT_COLOR_LIGHT,
         width: Dimensions.get('window').width,
-        marginTop: -15,
+        marginTop: -12,
     },
 
     headerContainer: {

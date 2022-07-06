@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { FontAwesome5, MaterialCommunityIcons, Ionicons, Feather } from 'react-native-vector-icons';
 import { getIsDark } from '../utils/index';
 import { colors } from '../utils/colors';
+import { detailsICONS } from '../utils/detailsIcons';
 
-const {PRIMARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_DARK, TEXT_COLOR_BLACK, TEXT_COLOR_LIGHTGRAY, TEXT_COLOR_DARKGRAY} = colors;
+const {PRIMARY_COLOR, SECONDARY_COLOR, TEXT_COLOR_LIGHT, TEXT_COLOR_DARK, TEXT_COLOR_BLACK, TEXT_COLOR_LIGHTGRAY, TEXT_COLOR_DARKGRAY} = colors;
 
 // Degree symbol : °
 
@@ -18,7 +19,7 @@ export default function WeatherDetails({ weatherInfo, units }) {
 
     let isDark = getIsDark();
 
-    function _getFormattedTime(epoch) {
+    function getFormattedTime(epoch) {
         var formattedTime;
         const time = new Date(epoch * 1000);
         const hours = time.getHours();
@@ -46,8 +47,7 @@ export default function WeatherDetails({ weatherInfo, units }) {
             formattedTime = `${hours - 12}:0${mins} AM`;
         }
         return formattedTime;
-    } // _getFormattedTime function
-
+    } // getFormattedTime function
 
     if (isDark) {
         if (units === 'imperial') {
@@ -55,14 +55,20 @@ export default function WeatherDetails({ weatherInfo, units }) {
                 <View style={styles.container}>
                     <View style={styles.weatherDetailsRow}>
                         <View style={styles.weatherDetialsBox}>
-                            <FontAwesome5 name="temperature-low" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <FontAwesome5 name="temperature-low" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['thermo'].image}/>
                             <View style={styles.detailsContainer}>
-                                <Text style={styles.weatherData}>{Math.round(min)} ° | {Math.round(max)} °</Text>
+                                <View style={styles.tempsContainer}>
+                                    <Text style={styles.weatherData1}>{Math.round(min)}°</Text>
+                                    <Text style={styles.weatherDataSlash}> / </Text>
+                                    <Text style={styles.weatherData2}>{Math.round(max)}°</Text>
+                                </View>
                                 <Text style={styles.weatherSubData}>Temperature</Text>
                             </View>
                         </View>
                         <View style={styles.weatherDetialsBox}>
-                            <FontAwesome5 name="wind" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <FontAwesome5 name="wind" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['wind'].image}/>
                             <View style={styles.detailsContainer}>
                                 <Text style={styles.weatherData}>{Math.round(wind_speed)} mph</Text>
                                 <Text style={styles.weatherSubData}>Wind Speed</Text>
@@ -71,14 +77,16 @@ export default function WeatherDetails({ weatherInfo, units }) {
                     </View>
                     <View style={styles.weatherDetailsRow}>
                         <View style={styles.weatherDetialsBox}>
-                            <Ionicons name="water" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <Ionicons name="water" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['rain'].image}/>
                             <View style={styles.detailsContainer}>
-                                <Text style={styles.weatherData}>{weatherInfo.hourly[0].pop} %</Text>
-                                <Text style={styles.weatherSubData}>Rain Probability</Text>
+                                <Text style={styles.weatherData}>{Math.round((weatherInfo.daily[0].pop)*100)} %</Text>
+                                <Text style={styles.weatherSubData}>Precipitation</Text>
                             </View>
                         </View>
                         <View style={styles.weatherDetialsBox}>
-                            <MaterialCommunityIcons name="cloud-outline" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <MaterialCommunityIcons name="cloud-outline" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['cloud'].image}/>
                             <View style={styles.detailsContainer}>
                                 <Text style={styles.weatherData}>{clouds} %</Text>
                                 <Text style={styles.weatherSubData}>Cloud Cover</Text>
@@ -87,16 +95,18 @@ export default function WeatherDetails({ weatherInfo, units }) {
                     </View>
                     <View style={styles.weatherDetailsRow}>
                         <View style={styles.weatherDetialsBox}>
-                            <Feather name="sunrise" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <Feather name="sunrise" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['rise'].image}/>
                             <View style={styles.detailsContainer}>
-                                <Text style={styles.weatherData}>{_getFormattedTime(sunrise)}</Text>
+                                <Text style={styles.weatherData}>{getFormattedTime(sunrise)}</Text>
                                 <Text style={styles.weatherSubData}>Sunrise</Text>
                             </View>
                         </View>
                         <View style={styles.weatherDetialsBox}>
-                            <Feather name="sunset" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <Feather name="sunset" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['set'].image}/>
                             <View style={styles.detailsContainer}>
-                                <Text style={styles.weatherData}>{_getFormattedTime(sunset)}</Text>
+                                <Text style={styles.weatherData}>{getFormattedTime(sunset)}</Text>
                                 <Text style={styles.weatherSubData}>Sunset</Text>
                             </View>
                         </View>
@@ -108,14 +118,20 @@ export default function WeatherDetails({ weatherInfo, units }) {
                 <View style={styles.container}>
                     <View style={styles.weatherDetailsRow}>
                         <View style={styles.weatherDetialsBox}>
-                            <FontAwesome5 name="temperature-low" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <FontAwesome5 name="temperature-low" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['thermo'].image}/>
                             <View style={styles.detailsContainer}>
-                                <Text style={styles.weatherData}>{Math.round(min)} ° | {Math.round(max)} °</Text>
+                                <View style={styles.tempsContainer}>
+                                    <Text style={styles.weatherData1}>{Math.round(min)}°</Text>
+                                    <Text style={styles.weatherDataSlash}> / </Text>
+                                    <Text style={styles.weatherData2}>{Math.round(max)}°</Text>
+                                </View>
                                 <Text style={styles.weatherSubData}>Temperature</Text>
                             </View>
                         </View>
                         <View style={styles.weatherDetialsBox}>
-                            <FontAwesome5 name="wind" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <FontAwesome5 name="wind" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['wind'].image}/>
                             <View style={styles.detailsContainer}>
                                 <Text style={styles.weatherData}>{Math.round(wind_speed)} km/h</Text>
                                 <Text style={styles.weatherSubData}>Wind Speed</Text>
@@ -124,14 +140,16 @@ export default function WeatherDetails({ weatherInfo, units }) {
                     </View>
                     <View style={styles.weatherDetailsRow}>
                         <View style={styles.weatherDetialsBox}>
-                            <Ionicons name="water" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <Ionicons name="water" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['rain'].image}/>
                             <View style={styles.detailsContainer}>
-                                <Text style={styles.weatherData}>{weatherInfo.hourly[0].pop} %</Text>
-                                <Text style={styles.weatherSubData}>Rain Probability</Text>
+                                <Text style={styles.weatherData}>{Math.round((weatherInfo.daily[0].pop)*100)} %</Text>
+                                <Text style={styles.weatherSubData}>Precipitation</Text>
                             </View>
                         </View>
                         <View style={styles.weatherDetialsBox}>
-                            <MaterialCommunityIcons name="cloud-outline" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <MaterialCommunityIcons name="cloud-outline" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['cloud'].image}/>
                             <View style={styles.detailsContainer}>
                                 <Text style={styles.weatherData}>{clouds} %</Text>
                                 <Text style={styles.weatherSubData}>Cloud Cover</Text>
@@ -140,16 +158,18 @@ export default function WeatherDetails({ weatherInfo, units }) {
                     </View>
                     <View style={styles.weatherDetailsRow}>
                         <View style={styles.weatherDetialsBox}>
-                            <Feather name="sunrise" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <Feather name="sunrise" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['rise'].image}/>
                             <View style={styles.detailsContainer}>
-                                <Text style={styles.weatherData}>{_getFormattedTime(sunrise)}</Text>
+                                <Text style={styles.weatherData}>{getFormattedTime(sunrise)}</Text>
                                 <Text style={styles.weatherSubData}>Sunrise</Text>
                             </View>
                         </View>
                         <View style={styles.weatherDetialsBox}>
-                            <Feather name="sunset" size={20} color={TEXT_COLOR_BLACK} style={styles.weatherIcons}/>
+                            {/* <Feather name="sunset" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={styles.detailsIcons} source={detailsICONS['set'].image}/>
                             <View style={styles.detailsContainer}>
-                                <Text style={styles.weatherData}>{_getFormattedTime(sunset)}</Text>
+                                <Text style={styles.weatherData}>{getFormattedTime(sunset)}</Text>
                                 <Text style={styles.weatherSubData}>Sunset</Text>
                             </View>
                         </View>
@@ -163,14 +183,20 @@ export default function WeatherDetails({ weatherInfo, units }) {
                 <View style={lightStyles.container}>
                     <View style={lightStyles.weatherDetailsRow}>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <FontAwesome5 name="temperature-low" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <FontAwesome5 name="temperature-low" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['thermo'].image}/>
                             <View style={lightStyles.detailsContainer}>
-                                <Text style={lightStyles.weatherData}>{Math.round(min)} ° | {Math.round(max)} °</Text>
+                                <View style={lightStyles.tempsContainer}>
+                                    <Text style={lightStyles.weatherData1}>{Math.round(min)}°</Text>
+                                    <Text style={lightStyles.weatherDataSlash}> / </Text>
+                                    <Text style={lightStyles.weatherData2}>{Math.round(max)}°</Text>
+                                </View>
                                 <Text style={lightStyles.weatherSubData}>Temperature</Text>
                             </View>
                         </View>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <FontAwesome5 name="wind" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <FontAwesome5 name="wind" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['wind'].image}/>
                             <View style={lightStyles.detailsContainer}>
                                 <Text style={lightStyles.weatherData}>{Math.round(wind_speed)} mph</Text>
                                 <Text style={lightStyles.weatherSubData}>Wind Speed</Text>
@@ -179,14 +205,16 @@ export default function WeatherDetails({ weatherInfo, units }) {
                     </View>
                     <View style={lightStyles.weatherDetailsRow}>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <Ionicons name="water" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <Ionicons name="water" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['rain'].image}/>
                             <View style={lightStyles.detailsContainer}>
-                                <Text style={lightStyles.weatherData}>{weatherInfo.hourly[0].pop} %</Text>
-                                <Text style={lightStyles.weatherSubData}>Rain Probability</Text>
+                                <Text style={lightStyles.weatherData}>{Math.round((weatherInfo.daily[0].pop)*100)} %</Text>
+                                <Text style={lightStyles.weatherSubData}>Precipitation</Text>
                             </View>
                         </View>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <MaterialCommunityIcons name="cloud-outline" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <MaterialCommunityIcons name="cloud-outline" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['cloud'].image}/>
                             <View style={lightStyles.detailsContainer}>
                                 <Text style={lightStyles.weatherData}>{clouds} %</Text>
                                 <Text style={lightStyles.weatherSubData}>Cloud Cover</Text>
@@ -195,16 +223,18 @@ export default function WeatherDetails({ weatherInfo, units }) {
                     </View>
                     <View style={lightStyles.weatherDetailsRow}>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <Feather name="sunrise" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <Feather name="sunrise" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['rise'].image}/>
                             <View style={lightStyles.detailsContainer}>
-                                <Text style={lightStyles.weatherData}>{_getFormattedTime(sunrise)}</Text>
+                                <Text style={lightStyles.weatherData}>{getFormattedTime(sunrise)}</Text>
                                 <Text style={lightStyles.weatherSubData}>Sunrise</Text>
                             </View>
                         </View>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <Feather name="sunset" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <Feather name="sunset" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['set'].image}/>
                             <View style={lightStyles.detailsContainer}>
-                                <Text style={lightStyles.weatherData}>{_getFormattedTime(sunset)}</Text>
+                                <Text style={lightStyles.weatherData}>{getFormattedTime(sunset)}</Text>
                                 <Text style={lightStyles.weatherSubData}>Sunset</Text>
                             </View>
                         </View>
@@ -216,14 +246,20 @@ export default function WeatherDetails({ weatherInfo, units }) {
                 <View style={lightStyles.container}>
                     <View style={lightStyles.weatherDetailsRow}>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <FontAwesome5 name="temperature-low" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <FontAwesome5 name="temperature-low" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['thermo'].image}/>
                             <View style={lightStyles.detailsContainer}>
-                                <Text style={lightStyles.weatherData}>{Math.round(min)} ° | {Math.round(max)} °</Text>
+                                <View style={lightStyles.tempsContainer}>
+                                    <Text style={lightStyles.weatherData1}>{Math.round(min)}°</Text>
+                                    <Text style={lightStyles.weatherDataSlash}> / </Text>
+                                    <Text style={lightStyles.weatherData2}>{Math.round(max)}°</Text>
+                                </View>
                                 <Text style={lightStyles.weatherSubData}>Temperature</Text>
                             </View>
                         </View>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <FontAwesome5 name="wind" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <FontAwesome5 name="wind" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['wind'].image}/>
                             <View style={lightStyles.detailsContainer}>
                                 <Text style={lightStyles.weatherData}>{Math.round(wind_speed)} km/h</Text>
                                 <Text style={lightStyles.weatherSubData}>Wind Speed</Text>
@@ -232,14 +268,16 @@ export default function WeatherDetails({ weatherInfo, units }) {
                     </View>
                     <View style={lightStyles.weatherDetailsRow}>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <Ionicons name="water" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <Ionicons name="water" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['rain'].image}/>
                             <View style={lightStyles.detailsContainer}>
-                                <Text style={lightStyles.weatherData}>{weatherInfo.hourly[0].pop} %</Text>
-                                <Text style={lightStyles.weatherSubData}>Rain Probability</Text>
+                                <Text style={lightStyles.weatherData}>{Math.round((weatherInfo.daily[0].pop)*100)} %</Text>
+                                <Text style={lightStyles.weatherSubData}>Precipitation</Text>
                             </View>
                         </View>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <MaterialCommunityIcons name="cloud-outline" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <MaterialCommunityIcons name="cloud-outline" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['cloud'].image}/>
                             <View style={lightStyles.detailsContainer}>
                                 <Text style={lightStyles.weatherData}>{clouds} %</Text>
                                 <Text style={lightStyles.weatherSubData}>Cloud Cover</Text>
@@ -248,16 +286,18 @@ export default function WeatherDetails({ weatherInfo, units }) {
                     </View>
                     <View style={lightStyles.weatherDetailsRow}>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <Feather name="sunrise" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <Feather name="sunrise" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['rise'].image}/>
                             <View style={lightStyles.detailsContainer}>
-                                <Text style={lightStyles.weatherData}>{_getFormattedTime(sunrise)}</Text>
+                                <Text style={lightStyles.weatherData}>{getFormattedTime(sunrise)}</Text>
                                 <Text style={lightStyles.weatherSubData}>Sunrise</Text>
                             </View>
                         </View>
                         <View style={lightStyles.weatherDetialsBox}>
-                            <Feather name="sunset" size={20} color={TEXT_COLOR_LIGHT} style={styles.weatherIcons}/>
+                            {/* <Feather name="sunset" size={20} style={styles.weatherIcons}/> */}
+                            <Image style={lightStyles.detailsIcons} source={detailsICONS['set'].image}/>
                             <View style={lightStyles.detailsContainer}>
-                                <Text style={lightStyles.weatherData}>{_getFormattedTime(sunset)}</Text>
+                                <Text style={lightStyles.weatherData}>{getFormattedTime(sunset)}</Text>
                                 <Text style={lightStyles.weatherSubData}>Sunset</Text>
                             </View>
                         </View>
@@ -285,37 +325,60 @@ const styles = StyleSheet.create({
 
     weatherDetialsBox: {
         width: 135,
-        marginHorizontal: 20,
+        marginHorizontal: 10,
         marginVertical: -5,
-        backgroundColor: TEXT_COLOR_LIGHT,
         padding: 5,
+        marginLeft: 5,
         borderRadius: 10,
         flexDirection: 'row',
-        opacity: 0.9,
-    },
-
-    weatherIcons: {
-        paddingTop: 6,
-        paddingLeft: 6,
-        marginLeft: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
 
     detailsContainer: {
-        paddingLeft: 10, 
+        paddingLeft: 20, 
+    },
+
+    tempsContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 
     weatherData: {
-        fontSize: 13,
-        color: TEXT_COLOR_DARK,
+        fontSize: 15,
         fontWeight: '700',
+        color: TEXT_COLOR_LIGHT,
+    },
+
+    weatherData1: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: '#74ccf7',
+    },
+
+    weatherData2: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: '#ff4a68',
+    },
+
+    weatherDataSlash: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: TEXT_COLOR_LIGHT,
     },
 
     weatherSubData: {
-        fontSize: 10,
-        color: TEXT_COLOR_DARKGRAY,
-        fontWeight: '700',
+        fontSize: 12,
+        color: TEXT_COLOR_LIGHTGRAY,
+        fontWeight: '600',
+    },
+
+    detailsIcons: {
+        marginTop: 3,
+        marginLeft: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 25,
+        height: 25,
     },
 });
 
@@ -336,36 +399,59 @@ const lightStyles = StyleSheet.create({
 
     weatherDetialsBox: {
         width: 135,
-        marginHorizontal: 20,
+        marginHorizontal: 10,
         marginVertical: -5,
-        backgroundColor: PRIMARY_COLOR,
         padding: 5,
+        marginLeft: 5,
         borderRadius: 10,
         flexDirection: 'row',
-        opacity: 0.9,
-    },
-
-    weatherIcons: {
-        paddingTop: 6,
-        paddingLeft: 6,
-        marginLeft: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
 
     detailsContainer: {
-        paddingLeft: 10, 
+        paddingLeft: 20, 
+    },
+
+    tempsContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 
     weatherData: {
-        fontSize: 13,
-        color: TEXT_COLOR_LIGHT,
+        fontSize: 15,
         fontWeight: '700',
+        color: TEXT_COLOR_DARK,
+    },
+
+    weatherData1: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: '#74ccf7',
+    },
+
+    weatherData2: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: '#ff4a68',
+    },
+
+    weatherDataSlash: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: TEXT_COLOR_DARK,
     },
 
     weatherSubData: {
-        fontSize: 10,
-        color: TEXT_COLOR_LIGHTGRAY,
-        fontWeight: '700',
+        fontSize: 12,
+        color: TEXT_COLOR_DARKGRAY,
+        fontWeight: '600',
+    },
+
+    detailsIcons: {
+        marginTop: 3,
+        marginLeft: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 25,
+        height: 25,
     },
 });

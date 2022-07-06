@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Appearance } from 'react-native';
 import homePage from './Pages/HomePage';
 import SearchPage from './Pages/SearchPage';
 import SettingsPage from './Pages/SettingsPage';
-import { setLocation, getIsDark, setIsDark } from './utils/index';
+import { setLocation, getIsDark, getDarkLong, getUnitsLong, setIsDark } from './utils/index';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { colors } from './utils/colors';
@@ -13,10 +13,13 @@ const {PRIMARY_COLOR, SECONDARY_COLOR, TIERTIARY_COLOR, TEXT_COLOR_LIGHT, TEXT_C
 const { Navigator, Screen} = createStackNavigator();
 
 export default function App() {
+  console.log('\n--- Debug Menu \\/ ---');
   const useCurrLocationFlag = true;
   setLocation(useCurrLocationFlag); // uses current location on load
 
-  setIsDark(true);
+  getDarkLong();
+  getUnitsLong();
+
   let isDark = getIsDark();
   
   const verticalAnimation = {
@@ -66,7 +69,7 @@ export default function App() {
         </NavigationContainer>
       </View> 
     );
-  } else {
+  } else if (!isDark) {
     return (
       <View style={{flex: 1, backgroundColor: TEXT_COLOR_LIGHT}}>
         <NavigationContainer>
@@ -89,9 +92,9 @@ export default function App() {
             <Screen name="Settings" component={SettingsPage} options={{
               verticalAnimation, 
               headerTitle: () => <Text style={lightStyles.settingsTitle}>Settings</Text>,
-              headerStyle: {backgroundColor: TEXT_COLOR_LIGHT, elevation: 0, shadowOpacity: 0},
+              headerStyle: {backgroundColor: PRIMARY_COLOR, elevation: 0, shadowOpacity: 0},
               headerTitleAlign: 'center',
-              headerTintColor: TEXT_COLOR_BLACK
+              headerTintColor: TEXT_COLOR_LIGHT
             }}/>
           </Navigator>
         </NavigationContainer>
@@ -126,7 +129,7 @@ const lightStyles = StyleSheet.create({
 
   settingsTitle: {
     alignItems: 'center',
-    color: TEXT_COLOR_BLACK,
+    color: TEXT_COLOR_LIGHT,
     fontSize: 22,
     fontWeight: '700',
   },
